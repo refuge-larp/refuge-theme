@@ -1,0 +1,190 @@
+/* Refuge polish pass — shared across all five workspaces. Loaded after each styles.css. */
+:root{
+  --font-body:'Public Sans','Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --font-display:'Source Serif 4','Iowan Old Style','Palatino Linotype',Georgia,serif;
+}
+body{font-family:var(--font-body);font-size:1rem;line-height:1.6;font-feature-settings:"kern","liga";text-rendering:optimizeLegibility}
+h1,h2,h3{font-optical-sizing:auto}
+h1{font-family:var(--font-display);font-weight:400;letter-spacing:-.022em;line-height:1.06}
+h2{font-family:var(--font-display);font-weight:400;letter-spacing:-.012em;line-height:1.18}
+h3{letter-spacing:-.005em}
+p,li,dd{text-wrap:pretty}
+
+/* Framed inside the hub: the hub carries the prototype disclaimer */
+.prototype-bar,.scenario-panel,.fixture-controls>div:nth-child(2),.shell-controls>div:has(#scenario),.fixture-control,.gallery{display:none!important}
+#mode-status:empty,#mode-description:empty,#mode-note:empty{display:none!important}
+:is(.page-heading,.page-title) p:empty{display:none}
+
+/* Prototype strip (standalone) */
+.prototype-bar{font-size:.6875rem!important;letter-spacing:.12em!important;text-transform:uppercase;font-weight:600;padding-block:.55rem!important}
+.prototype-bar strong{font-weight:600}
+
+/* Wordmark */
+.wordmark{font-family:var(--font-display)!important;font-weight:600!important;letter-spacing:.16em!important}
+.wordmark span{font-family:var(--font-body)!important;font-weight:500!important;font-size:.625rem!important;letter-spacing:.2em!important;text-transform:uppercase;color:var(--text-muted)}
+
+/* Labels, overlines */
+.overline,.eyebrow,.nav-label,.compact-label,.step-label{font-size:.6875rem!important;letter-spacing:.14em!important;text-transform:uppercase;font-weight:600!important;color:var(--text-muted)}
+label,legend{letter-spacing:.005em}
+
+/* Controls: values read as data, not as labels */
+input,select,textarea{font-weight:400!important;font-size:1rem}
+input::placeholder,textarea::placeholder{color:var(--text-muted);opacity:.85}
+button,.button{font-weight:500;letter-spacing:.005em}
+.primary{font-weight:600}
+
+/* Prototype controls read as meta-UI, quieter than the product */
+.mode-bar,.fixture-controls,.shell-controls,.database-mode-bar,.mode-notice{font-size:.8125rem}
+.mode-bar p,.fixture-controls p,.shell-controls p,.database-mode-bar p{font-size:.75rem!important;color:var(--text-muted);max-width:60ch}
+.scenario-panel{background:var(--surface-subtle)!important;border:1px dashed var(--control-border)!important}
+.scenario-panel summary{font-size:.8125rem}
+.fixture-controls,.shell-controls{background:var(--surface-subtle);border:1px dashed var(--control-border);border-radius:4px}
+.mode-notice{background:var(--surface-subtle)!important;border-block:1px dashed var(--line)}
+
+/* Page headings */
+.breadcrumbs,.breadcrumb,.character-breadcrumb{font-size:.75rem;letter-spacing:.01em;color:var(--text-muted)}
+.page-heading p:not(.overline),.page-title>p:not(.eyebrow){font-size:1.0625rem!important;line-height:1.5}
+
+/* Surfaces */
+.panel,.player-panel,.quiet-panel,.event-card,.operation-card{border-color:var(--line)}
+.panel>h2,.player-panel>h2,.panel-head h2,.panel-heading h2{font-size:1.65rem}
+.notice,.note{line-height:1.55}
+
+/* Tables */
+caption{font-size:.8125rem;font-weight:500;color:var(--text)!important;letter-spacing:.005em}
+.scroll-hint{font-size:.6875rem!important;letter-spacing:.04em;color:var(--text-muted);opacity:.9}
+thead th{font-size:.6875rem!important;letter-spacing:.1em;text-transform:uppercase;font-weight:600!important;color:var(--text-muted)}
+table{font-variant-numeric:tabular-nums}
+th,td{vertical-align:middle}
+@media(hover:hover){tbody tr:hover>*{background:var(--surface-subtle)}}
+
+/* Numbers and stats */
+.stat strong,.xp-balance,.aside-xp strong,.balance-pair strong{font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.01em}
+
+/* Selected navigation: stronger, calmer */
+.nav-group a[aria-current],.app-nav a[aria-current],.task-group a[aria-current],.sidebar a[aria-current]{font-weight:600}
+
+/* Links */
+a{text-decoration-thickness:1px;text-underline-offset:.22em}
+a:hover{text-decoration-thickness:2px}
+
+/* Shared database header — matches the public website's header */
+.rl-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;width:min(1360px,calc(100% - 80px));margin-inline:auto;padding:24px 0;border-block-end:1px solid var(--line);font-size:.875rem}
+.rl-header a{color:var(--text)}
+.rl-header .wordmark{font-size:1.75rem!important;line-height:1;text-decoration:none;white-space:nowrap}
+.rl-header nav{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-inline-start:auto}
+.rl-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:.55rem 1rem;border:var(--border-width,1px) solid var(--control-border);border-radius:3px;background:var(--surface);color:var(--text);font-size:.875rem;font-weight:600;line-height:1.4;text-decoration:none!important;white-space:nowrap}
+@media(hover:hover){.rl-btn:hover{background:var(--surface-subtle)}}
+.rl-context{font-size:.8125rem;color:var(--text-muted)}.rl-context strong{color:var(--text);font-weight:600}
+.rl-header .theme-control{display:flex;align-items:center;gap:10px;width:auto;min-width:0;margin:0}
+.rl-header .theme-control label{margin:0;font-size:.8125rem;font-weight:600}
+.rl-header .theme-control select{width:auto;min-height:48px;padding:8px 10px;font-size:1rem;margin:0}
+.rl-subnav{display:flex;flex-wrap:wrap;gap:4px 24px;width:min(1360px,calc(100% - 80px));margin-inline:auto;padding-block:6px;border-block-end:1px solid var(--line);font-size:.8125rem}
+.rl-subnav a{display:inline-flex;align-items:center;min-height:40px;text-decoration:none;color:var(--text-muted)}
+.rl-subnav a[aria-current]{color:var(--text);font-weight:600;text-decoration:underline;text-underline-offset:6px}
+@media(max-width:760px){.rl-header .wordmark{white-space:normal}.rl-header,.rl-subnav{width:calc(100% - 40px)}.rl-header nav{margin-inline-start:0}.rl-header .theme-control{width:100%}.rl-btn{min-height:44px;padding:8px 12px;font-size:.75rem}}
+
+/* Database mode is chosen on the real sites, not in these pages */
+.mode-bar,.fixture-controls,.shell-controls,.mode-notice{display:none!important}
+
+/* Search row: input and action button share one baseline and height */
+.search-row{align-items:flex-end}
+.search-row>label{margin:0}
+.search-row>label>input,.search-row>label>select{margin-block-end:0}
+.search-row>button,.search-row>.button{min-height:50px;margin:0}
+.search-row input{min-height:50px}
+
+/* Character context card */
+.context-strip{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px 32px;padding:18px 24px!important;border:1px solid var(--line)!important;border-radius:4px;background:var(--surface)}
+.context-strip .cs-id{display:grid;gap:2px}
+.context-strip .cs-id strong{font-family:var(--font-display);font-size:1.5rem;font-weight:600;line-height:1.2;letter-spacing:-.005em}
+.context-strip .cs-id span{font-size:.875rem;color:var(--text-muted)}
+.context-strip .cs-stats{display:flex;flex-wrap:wrap;gap:12px;margin:0}
+.context-strip .cs-stats>div{min-width:96px;padding:8px 16px;border:1px solid var(--line);border-radius:3px;background:var(--surface-subtle);text-align:center}
+.context-strip .cs-stats>div:first-child{background:var(--surface-tint);border-color:var(--control-border)}
+.context-strip dt{font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--text-muted)}
+.context-strip dd{margin:0;font:600 1.5rem/1.2 var(--font-display);font-variant-numeric:tabular-nums lining-nums}
+
+/* Side navigation: one style everywhere (modelled on chapter operations) */
+@media(min-width:781px){
+  .app-nav,.sidebar nav,.nav-group,.task-group{gap:2px}
+  .app-nav a,.sidebar nav a,.nav-group a,.task-group a{display:flex;align-items:center;justify-content:flex-start;gap:.7rem;min-height:40px;padding:.45rem .65rem;font-size:.8125rem;line-height:1.4;text-decoration:none!important;border:0;border-inline-start:2px solid transparent;border-radius:0;background:none;flex-grow:0}
+  .app-nav a[aria-current],.sidebar nav a[aria-current],.nav-group a[aria-current],.task-group a[aria-current]{background:var(--surface-tint);border-inline-start-color:var(--accent);font-weight:600}
+  .app-nav a[aria-current]::after,.sidebar nav a[aria-current]::after,.task-group a[aria-current]::after{content:'✓';margin-inline-start:auto;font-size:.8125rem}
+  .sidebar nav a[aria-current]::before,.task-group a[aria-current]::before{content:none}
+  .app-nav .nav-label{margin-block:1.25rem .25rem;padding-inline:.65rem}
+  .app-nav .nav-label:first-child{margin-block-start:0}
+}
+@media(hover:hover) and (min-width:781px){
+  .app-nav a:not([aria-current]):hover,.sidebar nav a:not([aria-current]):hover,.task-group a:not([aria-current]):hover{background:var(--surface-subtle)}
+}
+
+/* Identity block (crest, context, name) shared by every side menu */
+.rl-id{margin-block-end:1.5rem;padding-inline:.65rem}
+.rl-crest{position:relative;display:flex;align-items:center;justify-content:center;width:55px;height:64px;margin-block-end:1rem;border:1px solid var(--control-border);border-radius:25px 25px 3px 3px;background:var(--surface-tint);font:400 2rem/1 var(--font-display)}
+.rl-crest span{position:absolute;inset-block-end:3px;inset-inline-end:5px;font-size:.8rem}
+.rl-id h2{font-size:1.8rem;margin:.25rem 0}
+.rl-id .muted{font-size:.75rem;color:var(--text-muted)}
+@media(max-width:780px){.rl-id{display:none}}
+
+/* Crest as a heater shield (not a tombstone) */
+.rl-crest{--shield:polygon(0 0,100% 0,100% 56%,88% 77%,50% 100%,12% 77%,0 56%);width:58px;height:66px;border:0;border-radius:0;background:var(--control-border);clip-path:var(--shield);padding-block-end:10px;isolation:isolate}
+.rl-crest::before{content:'';position:absolute;inset:1.5px;background:var(--surface-tint);clip-path:var(--shield);z-index:-1}
+.rl-crest span{inset-block-end:14px;inset-inline-end:auto;inset-inline-start:50%;transform:translateX(-50%);font-size:.7rem;opacity:.0}
+
+/* Chapter operations crest: same shield */
+.chapter-mark{--shield:polygon(0 0,100% 0,100% 56%,88% 77%,50% 100%,12% 77%,0 56%);width:58px!important;height:66px!important;border:0!important;border-radius:0!important;background:var(--control-border)!important;clip-path:var(--shield);padding-block-end:10px;isolation:isolate}
+.chapter-mark::before{content:'';position:absolute;inset:1.5px;background:var(--surface-tint);clip-path:var(--shield);z-index:-1}
+.chapter-mark span{display:none}
+
+/* Match every side menu to the Administration menu */
+@media(min-width:781px){
+  .app-nav a,.sidebar nav a,.nav-group a,.task-group a{color:var(--accent)}
+  .app-nav a[aria-current],.sidebar nav a[aria-current],.nav-group a[aria-current],.task-group a[aria-current]{color:var(--text)}
+  .nav-group a>span{display:none}
+  .app-nav .nav-label,.nav-group>p,.nav-group .overline,.task-group h2{font-family:var(--font-body)!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.02em!important;text-transform:none!important;color:var(--text-muted)!important;margin-block:0 .5rem}
+  .app-nav .nav-label{margin-block-start:1.5rem;padding-inline:0}
+  .app-nav .nav-label:first-of-type{margin-block-start:0}
+  .nav-group{margin-block:0 1.5rem}
+}
+
+/* Staff menu uses the same grouped layout */
+@media(min-width:781px){
+  .sidebar nav .nav-label{font-family:var(--font-body)!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.02em!important;text-transform:none!important;color:var(--text-muted)!important;margin:1.5rem 0 .5rem}
+  .sidebar nav .nav-label:first-child{margin-block-start:0}
+  .sidebar nav{margin-block:0}
+  .rl-id h2{font-size:1.6rem;line-height:1.15}
+}
+
+/* Long badges and e-mail addresses wrap at large text sizes instead of widening the page */
+.badge{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.fact-list dd{min-width:0;overflow-wrap:anywhere}
+/* At 200% text on small phones, break long words rather than widen the page */
+main,.rl-header,footer{overflow-wrap:anywhere}
+main table{overflow-wrap:normal}
+
+/* Phone-sized header: wordmark and a compact theme picker share the first row,
+   smaller buttons sit on the row below */
+@media(max-width:600px){
+  .combined-header,.rl-header{gap:10px 8px;padding-block:14px 12px;justify-content:flex-start}
+  .combined-header .wordmark,.rl-header .wordmark{order:1;flex:1 1 auto;font-size:1.3rem!important;white-space:normal}
+  .combined-header .theme-control,.rl-header .theme-control{order:2;width:auto!important;min-width:0!important;gap:6px;margin:0 0 0 auto}
+  .combined-header nav,.rl-header nav{order:3;flex-basis:100%;gap:6px;margin-inline-start:0}
+  .combined-header .button,.combined-header .menu-trigger,.rl-btn{min-height:34px!important;padding:4px 10px!important;font-size:.75rem!important;gap:4px}
+  /* Label stays for screen readers; visually the picker is just the menu */
+  .combined-header .theme-control label,.rl-header .theme-control label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+  .combined-header .theme-control select,.rl-header .theme-control select{width:auto!important;min-width:0!important;max-width:7.5rem;min-height:34px!important;height:34px;padding:2px 6px!important;font-size:.8125rem!important}
+  .rl-context{font-size:.75rem;flex-basis:100%}
+}
+/* Staff side menu on phones: group labels start their own row */
+@media(max-width:780px){
+  .sidebar nav .nav-label{flex-basis:100%;margin:.75rem 0 .25rem!important}
+  .sidebar nav .nav-label:first-child{margin-block-start:0!important}
+}
+/* Public header and footer use the same phone gutters as the page content */
+@media(max-width:760px){.combined-header.wrap,.site-footer.wrap{width:calc(100% - 40px)}}
+@media(max-width:360px){.combined-header.wrap,.site-footer.wrap{width:calc(100% - 32px)}}
+@media(max-width:360px){
+  .combined-header .wordmark,.rl-header .wordmark{font-size:1.1rem!important}
+  .combined-header .theme-control select,.rl-header .theme-control select{max-width:6.5rem}
+}

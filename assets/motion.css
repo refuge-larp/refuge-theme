@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Refuge motion: shared by the public website and the Refuge Database.
+   No dependencies. See MOTION.md for the full list of effects.
+
+   Rules this file keeps:
+   - Every movement lives inside @media (prefers-reduced-motion: no-preference).
+   - Only transform, opacity and filter animate. (The database's hover and
+     row feedback also fades background-color, at 150ms or less.)
+   - Transitions only, named explicitly, never "all", so any change can
+     reverse mid-way.
+   - Nothing is hidden by this file alone. Hidden "before" states are only
+     ever applied by motion.js, so the page reads fine if JavaScript fails.
+
+   Pages opt in with <html data-motion="full"> (public website) or
+   <html data-motion="restrained"> (database).
+   ========================================================================== */
+
+:root {
+  --m-instant: 0ms;
+  --m-fast: 150ms;        /* hover, press, filter cross-fade, closing */
+  --m-feedback: 120ms;    /* database hover/focus/row feedback */
+  --m-base: 300ms;        /* reveals, dialogs opening, headings, icon swaps */
+  --m-settle: 600ms;      /* hero photos settling into place */
+  --m-zoom: 700ms;        /* slow photo zoom on hover */
+  --m-ease-out: cubic-bezier(.2, .7, .2, 1);
+  --m-ease-in: cubic-bezier(.4, 0, 1, 1);
+  --m-lift: -2px;
+  --m-shadow-rest: drop-shadow(0 0 0 rgb(0 0 0 / 0));
+  --m-shadow-lift: drop-shadow(0 6px 10px rgb(0 0 0 / .14));
+}
+
+/* --------------------------------------------------------------------------
+   Static (no movement): safe in every motion setting
+   -------------------------------------------------------------------------- */
+
+/* Numbers that change stay the same width */
+[data-xp], #learned-count, .cs-stats dd, .purchase-summary dd,
+.skill-cost, .xp-balance strong, .aside-xp strong { font-variant-numeric: tabular-nums lining-nums; }
+
+/* During a theme switch nothing transitions, so colours don't smear */
+.m-theme-switching,
+.m-theme-switching *,
+.m-theme-switching *::before,
+.m-theme-switching *::after,
+.m-theme-switching *::backdrop { transition: none !important; }
+
+/* Public header: becomes a sticky bar only when motion.js is running */
+.m-header-bar { position: relative; isolation: isolate; }
+.m-js .m-header-bar { position: sticky; inset-block-start: 0; z-index: 25; }
+.m-header-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: var(--page);
+  background: color-mix(in srgb, var(--page) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px -14px rgb(0 0 0 / .45);
+}
+.m-header-bar.m-scrolled::before { opacity: 1; }
+/* The skip link stays above the sticky header when focused */
+.m-js .skip-link { z-index: 40; }
+
+/* Icon swap: two glyphs share one grid cell; state picks which one shows */
+.m-swap { display: inline-grid; place-items: center; inline-size: 1em; margin-inline-end: .45em; font-style: normal; font-weight: 400; line-height: 1; vertical-align: .05em; }
+.m-swap > i { grid-area: 1 / 1; font-style: normal; }
+.m-swap > i:last-child,
+[data-swap="b"] > .m-swap > i:first-child,
+details[open] > summary > .m-swap > i:first-child { opacity: 0; }
+[data-swap="b"] > .m-swap > i:last-child,
+details[open] > summary > .m-swap > i:last-child { opacity: 1; }
+summary.m-summary { list-style: none; }
+summary.m-summary::-webkit-details-marker { display: none; }
+
+/* Cross-fade host for the event filter */
+.m-xfade-host { position: relative; overflow: clip; }
+.m-xfade-ghost { position: absolute; inset: 0 0 auto 0; pointer-events: none; }
+
+/* ==========================================================================
+   Movement: only when the visitor hasn't asked for reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ---------- Shared: dialogs and popovers ---------- */
+  /* Open: 300ms ease-out from 12px below, 4px blur, transparent.
+     Close: 150ms ease-in back to that state. */
+  dialog {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+    transition-property: opacity, transform, filter, overlay, display;
+    transition-duration: var(--m-fast);
+    transition-timing-function: var(--m-ease-in);
+    transition-behavior: allow-discrete;
+  }
+  dialog[open] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition-duration: var(--m-base);
+    transition-timing-function: var(--m-ease-out);
+  }
+  @starting-style {
+    dialog[open] { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  }
+  dialog::backdrop {
+    opacity: 0;
+    transition-property: opacity, overlay, display;
+    transition-duration: var(--m-fast);
+    transition-timing-function: var(--m-ease-in);
+    transition-behavior: allow-discrete;
+  }
+  dialog[open]::backdrop { opacity: 1; transition-duration: var(--m-base); transition-timing-function: var(--m-ease-out); }
+  @starting-style {
+    dialog[open]::backdrop { opacity: 0; }
+  }
+
+  /* Header dropdown (Refuge Database ▾) */
+  .menu-list {
+    transition-property: opacity, transform, filter, display;
+    transition-duration: var(--m-fast);
+    transition-timing-function: var(--m-ease-in);
+    transition-behavior: allow-discrete;
+  }
+  .menu-list[hidden] { opacity: 0; transform: translateY(-12px); filter: blur(4px); }
+  .menu-list:not([hidden]) { opacity: 1; transform: none; filter: none; transition-duration: var(--m-base); transition-timing-function: var(--m-ease-out); }
+  @starting-style {
+    .menu-list:not([hidden]) { opacity: 0; transform: translateY(-12px); filter: blur(4px); }
+  }
+
+  /* ---------- Shared: button press ---------- */
+  :is(button, .button, .rl-btn, [role="button"]) {
+    transition-property: transform;
+    transition-duration: var(--m-fast);
+    transition-timing-function: var(--m-ease-out);
+  }
+  :is(button, .button, .rl-btn, [role="button"]):not(:disabled):not([aria-disabled="true"]):active { transform: scale(.96); }
+
+  /* ---------- Shared: icon swap (expand ↔ collapse, copy ↔ copied) ---------- */
+  .m-swap > i {
+    transform: scale(1);
+    filter: blur(0);
+    transition-property: opacity, transform, filter;
+    transition-duration: var(--m-base);
+    transition-timing-function: var(--m-ease-out);
+  }
+  .m-swap > i:last-child,
+  [data-swap="b"] > .m-swap > i:first-child,
+  details[open] > summary > .m-swap > i:first-child { transform: scale(.25); filter: blur(4px); }
+  [data-swap="b"] > .m-swap > i:last-child,
+  details[open] > summary > .m-swap > i:last-child { transform: scale(1); filter: blur(0); }
+
+  /* ---------- Public website (full set) ---------- */
+  html[data-motion="full"] { scroll-behavior: smooth; scroll-padding-block-start: calc(var(--m-header-h, 0px) + 16px); }
+
+  /* Hover lift: 150ms, 2px up, soft shadow. Underlines and borders stay. */
+  [data-motion="full"] :is(.resources a, .tile, .button, .rl-btn, .menu-trigger,
+                           .link-list a, .chapter-links a, .text-link,
+                           .event-preview-button, .site-footer a) {
+    transition-property: transform, filter;
+    transition-duration: var(--m-fast);
+    transition-timing-function: var(--m-ease-out);
+  }
+  [data-motion="full"] :is(.link-list a, .chapter-links a, .text-link, .event-preview-button, .site-footer a) { display: inline-block; }
+  [data-motion="full"] :is(.resources a, .tile, .button, .menu-trigger) { filter: var(--m-shadow-rest); }
+  @media (hover: hover) {
+    [data-motion="full"] :is(.link-list a, .chapter-links a, .text-link,
+                             .event-preview-button, .site-footer a):hover { transform: translateY(var(--m-lift)); }
+    [data-motion="full"] :is(.resources a, .tile, .button, .menu-trigger):hover { transform: translateY(var(--m-lift)); filter: var(--m-shadow-lift); }
+    [data-motion="full"] :is(.button, .menu-trigger):not(:disabled):hover:active { transform: translateY(0) scale(.96); }
+  }
+
+  /* Hero photos: slow zoom inside the frame, on hover only */
+  [data-motion="full"] .tile img { transform: scale(1); transition-property: transform; transition-duration: var(--m-zoom); transition-timing-function: var(--m-ease-out); }
+  @media (hover: hover) {
+    [data-motion="full"] .tile:hover img { transform: scale(1.04); }
+  }
+
+  /* Header: frosted background and shadow fade in once scrolled */
+  .m-header-bar::before { transition-property: opacity; transition-duration: var(--m-base); transition-timing-function: ease-out; }
+
+  /* ---------- Database (restrained set) ---------- */
+  /* Hover, focus, tab, filter and row feedback: background-color or
+     opacity only, 120ms. Table rows and form fields don't animate. */
+  [data-motion="restrained"] :is(a, summary, .side-nav a, .app-nav a, .nav-group a, .task-group a, .sidebar nav a, .tab, [role="tab"]) {
+    transition-property: background-color, opacity;
+    transition-duration: var(--m-feedback);
+    transition-timing-function: ease-out;
+  }
+  [data-motion="restrained"] :is(button, .button, .rl-btn, [role="button"]) {
+    transition-property: transform, background-color, opacity;
+    transition-duration: var(--m-fast), var(--m-feedback), var(--m-feedback);
+    transition-timing-function: var(--m-ease-out), ease-out, ease-out;
+  }
+  [data-motion="restrained"] :is(tr, td, th, input, select, textarea) { transition: none; }
+  /* ---------- One-time states set by motion.js ----------
+     Last in this block, with :root.m-js for weight, so they win over the
+     hover transitions above while they run. */
+  /* Reveal: 12px up, 4px blur, transparent → in place over 300ms ease-out */
+  :root.m-js .m-pre { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  :root.m-js .m-reveal {
+    transition-property: opacity, transform, filter;
+    transition-duration: var(--m-base);
+    transition-timing-function: ease-out;
+    transition-delay: var(--m-delay, 0ms);
+  }
+  /* Hero photos: fade up and settle (slightly longer, softer curve) */
+  :root.m-js .m-pre.m-photo { transform: translateY(16px) scale(.985); }
+  :root.m-js .m-reveal.m-photo { transition-duration: var(--m-settle); transition-timing-function: var(--m-ease-out); }
+
+  /* Event filter: rows cross-fade in 150ms */
+  /* Starting state for the fades below (opacity only) */
+  :root.m-js .m-fade-pre { opacity: 0; }
+
+  :root.m-js .m-xfade-in { transition-property: opacity; transition-duration: var(--m-fast); transition-timing-function: ease-out; }
+  .m-xfade-ghost { opacity: 1; transition-property: opacity; transition-duration: var(--m-fast); transition-timing-function: ease-in; }
+  .m-xfade-ghost.m-fade-out { opacity: 0; }
+
+  /* View change: the new heading fades in once, 300ms */
+  :root.m-js .m-heading { transition-property: opacity; transition-duration: var(--m-base); transition-timing-function: ease-out; }
+
+  /* Changed numbers (XP, learned count): brief cross-fade, 300ms */
+  :root.m-js .m-number { transition-property: opacity; transition-duration: var(--m-base); transition-timing-function: ease-out; }
+
+  /* While booting the public page, hide only what is about to animate in,
+     so it doesn't flash before motion.js sets its starting state.
+     motion.js removes this class within one task (3s failsafe). */
+  .m-booting :is(.page-heading, .mosaic .tile, .resources, .help-column > section,
+                 .events-panel, .chapters-panel, .library, .site-footer) { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: instant changes, nothing moves, scales, blurs or zooms
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .tile img { transform: none !important; transition: none !important; }
+  .m-swap > i { transition: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Forced colours: system colours, no decorative shadow or blur
+   -------------------------------------------------------------------------- */
+@media (forced-colors: active) {
+  .m-header-bar::before { background: Canvas; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  :root { --m-shadow-lift: none; --m-shadow-rest: none; }
+}

@@ -1,0 +1,46 @@
+name: Build and deploy Refuge site
+on:
+  workflow_call:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: refuge-pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned theme tooling
+        uses: actions/checkout@v4
+        with:
+          repository: refuge-larp/refuge-theme
+          ref: v1.0.0
+          path: .theme-tooling
+      - name: Build immutable theme snapshot
+        run: python3 .theme-tooling/scripts/build.py . ../site-output
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser checks
+        working-directory: .theme-tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.58.2
+          ./node_modules/.bin/playwright install --with-deps chromium
+      - name: Test generated site before deploying
+        run: |
+          python3 -m http.server 8799 --bind 127.0.0.1 --directory ../site-output > /tmp/refuge-preview.log 2>&1 &
+          trap 'kill $!' EXIT
+          node .theme-tooling/scripts/check.cjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ../site-output
+      - name: Deploy tested site
+        id: deployment
+        uses: actions/deploy-pages@v4
