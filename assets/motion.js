@@ -121,7 +121,7 @@
   function reveals() {
     if (!window.IntersectionObserver) return;
 
-    var SECTIONS = '.page-heading, .resources, .help-column > section, .events-panel, .chapters-panel, .library, .site-footer, .character-heading, .character-layout';
+    var SECTIONS = '[data-motion-reveal], .page-heading, .resources, .help-column > section, .events-panel, .chapters-panel, .library, .site-footer, .character-heading, .character-layout';
     var ROWS = { '.events-panel': '.event-row', '.chapters-panel': '.chapter-row' };
     var ROW_STEP = 60, ROW_START = 120, ROW_CAP = 10;
 

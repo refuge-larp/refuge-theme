@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build a site with an immutable snapshot of the selected theme release."""
 import json
+import os
 import shutil
 import sys
 import urllib.request
@@ -14,6 +15,8 @@ config = json.loads((site / 'theme.json').read_text())
 release = config['release']
 base = 'https://api.github.com/repos/refuge-larp/refuge-theme'
 headers = {'Accept': 'application/vnd.github+json', 'User-Agent': 'refuge-theme-builder'}
+if os.environ.get('GH_TOKEN'):
+    headers['Authorization'] = 'Bearer ' + os.environ['GH_TOKEN']
 def api(path):
     return json.load(urllib.request.urlopen(urllib.request.Request(base + path, headers=headers), timeout=30))
 if release == 'latest':

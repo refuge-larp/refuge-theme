@@ -20,9 +20,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: refuge-larp/refuge-theme
-          ref: v1.0.0
+          ref: v1.0.1
           path: .theme-tooling
       - name: Build immutable theme snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: python3 .theme-tooling/scripts/build.py . ../site-output
       - uses: actions/setup-node@v4
         with:
